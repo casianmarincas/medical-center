@@ -1,5 +1,8 @@
 package org.example;
 
+import med.networking.Request;
+import med.networking.RequestType;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -36,7 +39,17 @@ public class ClientRequest implements Runnable {
         }
     }
 
+    private void sendRequest(Request request) {
+        try {
+            output.writeObject(request);
+            output.flush();
+        } catch (IOException e) {
+            throw new RuntimeException("Error sending object " + e);
+        }
+    }
+
     public void run() {
+        sendRequest(new Request.Builder().type(RequestType.ADD_APPOINTMENT).data(requestData.getObject()).build());
 
     }
 }

@@ -6,10 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 @Entity
 @Table(name="payments")
-public class Payment {
+public class Payment implements Serializable {
 
     @Id
     @GeneratedValue(generator="increment")

@@ -1,4 +1,6 @@
 package org.example;
 
-public class RequestData {
+public abstract class RequestData {
+
+    public abstract Object getObject();
 }

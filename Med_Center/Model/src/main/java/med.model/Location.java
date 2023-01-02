@@ -6,10 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name="locations")
-public class Location {
+public class Location implements Serializable {
 
     @Id
     @GeneratedValue(generator="increment")

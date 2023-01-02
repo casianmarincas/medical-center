@@ -1,8 +1,11 @@
 package med.server;
 
+import med.model.Appointment;
 import med.networking.Request;
+import med.networking.RequestType;
 import med.networking.Response;
 import med.networking.ResponseType;
+import med.service.IService;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,8 +19,11 @@ class ServiceRequest implements Runnable {
     private ObjectInputStream input;
     private ObjectOutputStream output;
 
-    public ServiceRequest(Socket connection) {
+    private IService service;
+
+    public ServiceRequest(Socket connection, IService service) {
         this.socket = connection;
+        this.service = service;
         try {
             output = new ObjectOutputStream(connection.getOutputStream());
             output.flush();
@@ -55,6 +61,12 @@ class ServiceRequest implements Runnable {
     private Response handleRequest(Request request) {
         Response response = null;
 
+        if (request.type().equals(RequestType.ADD_APPOINTMENT)) {
+            System.out.println("Am primit request add appointment");
+            Appointment appointment = (Appointment) request.data();
+            Appointment responseAppointment = service.addAppointment(appointment);
+            sendResponse(new Response.Builder().type(ResponseType.OK).data(responseAppointment).build());
+        }
         return response;
     }
 

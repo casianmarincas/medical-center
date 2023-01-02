@@ -32,7 +32,7 @@ public class Server {
                 try {
                     Socket s = serverSocket.accept();
                     System.out.println("Processing request");
-                    executorService.submit(new ServiceRequest(s));
+                    executorService.submit(new ServiceRequest(s, service));
                 } catch (IOException ioe) {
                     System.out.println("Error accepting connection");
                     ioe.printStackTrace();

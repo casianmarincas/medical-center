@@ -5,6 +5,8 @@ import med.persistence.hibernate.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.time.LocalDateTime;
+
 public class AppointmentRepo {
 
     public Appointment add(Appointment appointment) {
@@ -12,6 +14,7 @@ public class AppointmentRepo {
             Transaction tx = null;
             try {
                 tx = session.beginTransaction();
+                appointment.setAppointmentDateTime(LocalDateTime.now());
                 session.save(appointment);
                 tx.commit();
                 return appointment;

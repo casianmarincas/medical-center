@@ -6,10 +6,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 @Entity
 @Table(name="treatments")
-public class Treatment {
+public class Treatment implements Serializable {
 
     @Id
     @GeneratedValue(generator="increment")
