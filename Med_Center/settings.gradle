@@ -1,0 +1,8 @@
+rootProject.name = 'Med_Center'
+include 'Model'
+include 'Persistence'
+include 'Client'
+include 'Server'
+include 'Service'
+include 'Networking'
+
