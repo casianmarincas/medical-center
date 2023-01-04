@@ -13,8 +13,8 @@ import java.time.LocalDateTime;
 public class Payment implements Serializable {
 
     @Id
-    @GeneratedValue(generator="increment")
-    @GenericGenerator(name="increment", strategy = "increment")
+    @GeneratedValue(generator="inc-gen")
+    @GenericGenerator(name="inc-gen", strategy = "increment")
     private int id;
     private LocalDateTime date;
     private String cnp;

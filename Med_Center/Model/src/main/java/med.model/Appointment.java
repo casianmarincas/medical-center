@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 public class Appointment implements Serializable {
 
     @Id
-    @GeneratedValue(generator="increment")
-    @GenericGenerator(name="increment", strategy = "increment")
+    @GeneratedValue(generator="inc-gen")
+    @GenericGenerator(name="inc-gen", strategy = "increment")
     private int id;
 
     @ManyToOne(cascade = {CascadeType.ALL})

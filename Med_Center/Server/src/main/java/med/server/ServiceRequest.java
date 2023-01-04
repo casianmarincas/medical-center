@@ -1,6 +1,6 @@
 package med.server;
 
-import med.model.Appointment;
+import med.model.*;
 import med.networking.Request;
 import med.networking.RequestType;
 import med.networking.Response;
@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.List;
 
 class ServiceRequest implements Runnable {
 
@@ -61,11 +62,33 @@ class ServiceRequest implements Runnable {
     private Response handleRequest(Request request) {
         Response response = null;
 
-        if (request.type().equals(RequestType.ADD_APPOINTMENT)) {
-            System.out.println("Am primit request add appointment");
-            Appointment appointment = (Appointment) request.data();
-            Appointment responseAppointment = service.addAppointment(appointment);
-            sendResponse(new Response.Builder().type(ResponseType.OK).data(responseAppointment).build());
+        try {
+            if (request.type().equals(RequestType.ADD_APPOINTMENT)) {
+                System.out.println("Am primit request add appointment");
+                Appointment appointment = (Appointment) request.data();
+                Appointment responseAppointment = service.addAppointment(appointment);
+                response = new Response.Builder().type(ResponseType.OK).data(responseAppointment).build();
+            } else if (request.type().equals(RequestType.ADD_PAYMENT)) {
+                System.out.println("Am primit request add payment");
+                Payment payment = (Payment) request.data();
+                Payment responsePayment = service.addPayment(payment);
+                response = new Response.Builder().type(ResponseType.OK).data(responsePayment).build();
+
+            } else if (request.type().equals(RequestType.GET_ALL_LOCATION)) {
+                System.out.println("Am primit request get all location");
+                List<Location> responseList = service.getAllLocation();
+                response = new Response.Builder().type(ResponseType.OK).data(responseList).build();
+            } else if (request.type().equals(RequestType.GET_ALL_TREATMENT)) {
+                System.out.println("Am primit request get all treatment");
+                List<Treatment> responseList = service.getAllTreatment();
+                response = new Response.Builder().type(ResponseType.OK).data(responseList).build();
+            } else if (request.type().equals(RequestType.GET_ALL_PERSON)) {
+                System.out.println("Am primit request get all person");
+                List<Person> responseList = service.getAllPerson();
+                response = new Response.Builder().type(ResponseType.OK).data(responseList).build();
+            }
+        } catch (Error e){
+            response = new Response.Builder().type(ResponseType.ERROR).build();
         }
         return response;
     }
