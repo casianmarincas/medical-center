@@ -13,8 +13,8 @@ import java.io.Serializable;
 public class Treatment implements Serializable {
 
     @Id
-    @GeneratedValue(generator="increment")
-    @GenericGenerator(name="increment", strategy = "increment")
+    @GeneratedValue(generator="inc-gen")
+    @GenericGenerator(name="inc-gen", strategy = "increment")
     private int id;
     private double cost;
     private double time;
@@ -23,10 +23,10 @@ public class Treatment implements Serializable {
     public Treatment() {
     }
 
-    public Treatment(double cost, double time, int maxPatients) {
+    public Treatment(double cost, double time) {
         this.cost = cost;
         this.time = time;
-        this.maxPatients = maxPatients;
+
     }
 
     public double getCost() {
@@ -45,13 +45,7 @@ public class Treatment implements Serializable {
         this.time = time;
     }
 
-    public int getMaxPatients() {
-        return maxPatients;
-    }
 
-    public void setMaxPatients(int maxPatients) {
-        this.maxPatients = maxPatients;
-    }
 
 
 }

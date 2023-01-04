@@ -1,7 +1,6 @@
 package org.example;
 
-import med.model.Appointment;
-import med.model.Payment;
+import med.model.*;
 import med.networking.Request;
 import med.networking.RequestType;
 import med.networking.Response;
@@ -12,8 +11,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.concurrent.Callable;
 
-public class ClientRequest implements Runnable {
+public class GetAllRequest implements Callable<String> {
 
     private Socket socket;
     private String ipAddress;
@@ -21,11 +22,14 @@ public class ClientRequest implements Runnable {
 
     private ObjectInputStream input;
     private ObjectOutputStream output;
+    private List<Person> personList;
+    private List<Treatment> treatmentList;
+    private List<Location> locationList;
 
 
     private RequestData requestData;
 
-    public ClientRequest(String ipAddress, int port, RequestData requestData) {
+    public GetAllRequest(String ipAddress, int port) {
         this.ipAddress = ipAddress;
         this.port = port;
         this.requestData = requestData;
@@ -63,23 +67,39 @@ public class ClientRequest implements Runnable {
         return response;
     }
 
-    public void run() {
-        Appointment appointment = (Appointment) requestData.getObject();
-        sendRequest(new Request.Builder().type(RequestType.ADD_APPOINTMENT).data(appointment).build());
-        Response response = getResponse();
-        if (response.type().equals(ResponseType.OK)){
-            initConnection();
-            System.out.println("Appointment facut cu succes!!!");
-            Payment payment = new Payment(LocalDateTime.now(), appointment.getPerson().getCnp(), appointment.getTreatment().getCost());
 
-            sendRequest(new Request.Builder().type(RequestType.ADD_PAYMENT).data(payment).build());
+    public List<Location> getLocationList(){
+        return locationList;
+    }
+
+    public List<Treatment> getTreatmentList(){
+        return treatmentList;
+    }
+    public List<Person> getPersonList(){
+        return personList;
+    }
+
+    @Override
+    public String call() throws Exception {
+        sendRequest(new Request.Builder().type(RequestType.GET_ALL_LOCATION).build());
+        Response response = getResponse();
+        this.locationList = (List<Location>) response.data();
+        if (response.type().equals(ResponseType.OK)) {
+            initConnection();
+            sendRequest(new Request.Builder().type(RequestType.GET_ALL_TREATMENT).build());
             Response response2 = getResponse();
+            this.treatmentList = (List<Treatment>) response2.data();
+
             if (response2.type().equals(ResponseType.OK)) {
-                System.out.println("Payment facut cu succes!!!");
+                initConnection();
+                sendRequest(new Request.Builder().type(RequestType.GET_ALL_PERSON).build());
+                Response response3 = getResponse();
+                this.personList = (List<Person>) response3.data();
             }
 
         }
 
-
+        return "ok";
     }
+
 }

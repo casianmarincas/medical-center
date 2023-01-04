@@ -13,8 +13,8 @@ import java.io.Serializable;
 public class Location implements Serializable {
 
     @Id
-    @GeneratedValue(generator="increment")
-    @GenericGenerator(name="increment", strategy = "increment")
+    @GeneratedValue(generator="inc-gen")
+    @GenericGenerator(name="inc-gen", strategy = "increment")
     private int id;
     private String name;
 
