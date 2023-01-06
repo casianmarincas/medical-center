@@ -11,7 +11,7 @@ import java.util.List;
 
 public class AppointmentRepo {
 
-    public  synchronized Appointment add(Appointment appointment) {
+    public synchronized Appointment add(Appointment appointment) {
         Session session = HibernateUtils.getSessionFactory().openSession();
         try (session) {
             Transaction tx = null;
@@ -32,7 +32,7 @@ public class AppointmentRepo {
         return null;
     }
 
-    public List<Appointment> getAll() {
+    public synchronized List<Appointment> getAll() {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = null;
             try {

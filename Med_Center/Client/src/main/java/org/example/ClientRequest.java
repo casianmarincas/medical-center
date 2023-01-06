@@ -12,18 +12,19 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.time.LocalDateTime;
+import java.util.concurrent.Callable;
 
-public class ClientRequest implements Runnable {
+public class ClientRequest implements Callable<Object> {
 
     private Socket socket;
-    private String ipAddress;
-    private int port;
+    private final String ipAddress;
+    private final int port;
 
     private ObjectInputStream input;
     private ObjectOutputStream output;
 
 
-    private RequestData requestData;
+    private final RequestData requestData;
 
     public ClientRequest(String ipAddress, int port, RequestData requestData) {
         this.ipAddress = ipAddress;
@@ -63,23 +64,34 @@ public class ClientRequest implements Runnable {
         return response;
     }
 
-    public void run() {
-        Appointment appointment = (Appointment) requestData.getObject();
-        sendRequest(new Request.Builder().type(RequestType.ADD_APPOINTMENT).data(appointment).build());
-        Response response = getResponse();
-        if (response.type().equals(ResponseType.OK)){
-            initConnection();
-            System.out.println("Appointment facut cu succes!!!");
-            Payment payment = new Payment(LocalDateTime.now(), appointment.getPerson().getCnp(), appointment.getTreatment().getCost());
+    @Override
+    public Object call() {
 
+        Response response = null;
+        if (requestData.getType().equals(RequestType.ADD_APPOINTMENT)) {
+            Appointment appointment = (Appointment) requestData.getObject();
+            sendRequest(new Request.Builder().type(RequestType.ADD_APPOINTMENT).data(appointment).build());
+            response = getResponse();
+        }
+
+        if (requestData.getType().equals(RequestType.ADD_PAYMENT)) {
+            Payment payment = (Payment) requestData.getObject();
             sendRequest(new Request.Builder().type(RequestType.ADD_PAYMENT).data(payment).build());
-            Response response2 = getResponse();
-            if (response2.type().equals(ResponseType.OK)) {
-                System.out.println("Payment facut cu succes!!!");
-            }
+            response = getResponse();
+        }
+
+        if (requestData.getType().equals(RequestType.CANCEL_APPOINTMENT)) {
 
         }
 
+        if (requestData.getType().equals(RequestType.CANCEL_PAYMENT)) {
 
+        }
+
+        if (response.type().equals(ResponseType.OK)) {
+            System.out.println("OK!!!");
+        }
+
+        return response;
     }
 }

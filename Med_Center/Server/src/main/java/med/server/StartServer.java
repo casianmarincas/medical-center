@@ -1,12 +1,6 @@
 package med.server;
 
-import med.model.Location;
-import med.model.Treatment;
-import med.model.TreatmentLocation;
 import med.persistence.repository.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class StartServer {
 

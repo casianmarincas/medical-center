@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -27,13 +26,9 @@ public class GetAllRequest implements Callable<String> {
     private List<Location> locationList;
 
 
-    private RequestData requestData;
-
     public GetAllRequest(String ipAddress, int port) {
         this.ipAddress = ipAddress;
         this.port = port;
-        this.requestData = requestData;
-
         initConnection();
     }
 
@@ -60,7 +55,7 @@ public class GetAllRequest implements Callable<String> {
     private Response getResponse() {
         Response response;
         try {
-            response =  (Response) input.readObject();
+            response = (Response) input.readObject();
         } catch (IOException | ClassNotFoundException e) {
             throw new RuntimeException("Error sending object " + e);
         }
@@ -80,7 +75,7 @@ public class GetAllRequest implements Callable<String> {
     }
 
     @Override
-    public String call() throws Exception {
+    public String call() {
         sendRequest(new Request.Builder().type(RequestType.GET_ALL_LOCATION).build());
         Response response = getResponse();
         this.locationList = (List<Location>) response.data();

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class TreatmentLocationRepo {
 
-    public  synchronized TreatmentLocation add(TreatmentLocation treatment_location) {
+    public synchronized TreatmentLocation add(TreatmentLocation treatment_location) {
         Session session = HibernateUtils.getSessionFactory().openSession();
         try (session) {
             Transaction tx = null;
@@ -29,7 +29,7 @@ public class TreatmentLocationRepo {
         return null;
     }
 
-    public List<TreatmentLocation> getAll() {
+    public synchronized List<TreatmentLocation> getAll() {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = null;
             try {

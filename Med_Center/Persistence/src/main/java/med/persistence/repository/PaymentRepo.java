@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PaymentRepo {
 
-    public  synchronized Payment add(Payment payment) {
+    public synchronized Payment add(Payment payment) {
         Session session = HibernateUtils.getSessionFactory().openSession();
         try (session) {
             Transaction tx = null;
@@ -29,7 +29,7 @@ public class PaymentRepo {
         return null;
     }
 
-    public List<Payment> getAll() {
+    public synchronized List<Payment> getAll() {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = null;
             try {
