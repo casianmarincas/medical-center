@@ -16,9 +16,11 @@ public class Verifier extends Thread {
 
     private final Service service;
 
+
     public Verifier(Service service) {
         this.service = service;
     }
+
 
     @Override
     public void run() {
@@ -32,7 +34,6 @@ public class Verifier extends Thread {
                 locationAppointmentMap.get(appointment.getLocation()).add(appointment);
             }
 
-
             List<Payment> paymentList = service.getAllPayments();
             Map<Location, List<Payment>> locationPaymentMap = new HashMap<>();
             for (Payment payment : paymentList) {
@@ -40,34 +41,58 @@ public class Verifier extends Thread {
                 locationPaymentMap.get(payment.getLocation()).add(payment);
             }
 
+            List<Location> locations = service.getAllLocation();
 
             try {
-                generateReport(locationAppointmentMap, locationPaymentMap);
+                generateReport(locations, locationAppointmentMap, locationPaymentMap);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
 
 
             try {
-                sleep(10000);
+                sleep(4000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
-    private void generateReport(Map<Location, List<Appointment>> locationAppointmentMap, Map<Location, List<Payment>> locationPaymentMap) throws IOException {
+    private void generateReport(List<Location> locations, Map<Location, List<Appointment>> locationAppointmentMap, Map<Location, List<Payment>> locationPaymentMap) throws IOException {
 
         FileWriter myWriter = new FileWriter("report.txt");
 
-        for (Location l : locationPaymentMap.keySet()) {
+        for (Location l : locations) {
             myWriter.write(l.getName() + " at " + LocalDateTime.now() + '\n');
             double sold = 0;
-            for (Payment p : locationPaymentMap.get(l)) {
-                sold+=p.getSum();
+            if (locationPaymentMap.containsKey(l)) {
+                for (Payment p : locationPaymentMap.get(l)) {
+                    sold += p.getSum();
+                }
             }
             myWriter.write("SOLD: " + sold + '\n');
+            myWriter.write("NOT PAID:\n");
+            if (locationAppointmentMap.containsKey(l)) {
+                for (Appointment appointment : locationAppointmentMap.get(l)) {
+                    boolean found = false;
+                    if (locationPaymentMap.containsKey(l)) {
+                        List<Payment> paymentListTemporary = new ArrayList<>(locationPaymentMap.get(l));
+                        for (Payment payment : paymentListTemporary) {
+                            if (payment.getPerson().equals(appointment.getPerson()) &&
+                                    payment.getSum() == appointment.getTreatment().getCost()) {
+                                found = true;
+                                paymentListTemporary.remove(payment);
+                                break;
+                            }
 
+                        }
+                    }
+                    if (!found) {
+                        myWriter.write(appointment.toString() + '\n');
+                    }
+                }
+            }
+            myWriter.write('\n');
         }
         myWriter.close();
         System.out.println("Successfully wrote to the file.");

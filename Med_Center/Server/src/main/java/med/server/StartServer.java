@@ -7,6 +7,8 @@ import med.persistence.repository.*;
 
 import java.util.List;
 
+import static java.lang.Thread.sleep;
+
 public class StartServer {
 
     private static int defaultPort = 55555;
@@ -63,11 +65,18 @@ public class StartServer {
         System.out.println("Starting server on port: " + chatServerPort);
         Server server = new Server(service, chatServerPort);
         try {
-            Thread t = new Verifier(service);
+            Verifier t = new Verifier(service);
             t.start();
 
             server.start();
 
+/*
+            server.setRunning(false);
+            t.setRunning(false);
+*/
+//
+//            server.join();
+//            t.join();
         } catch (RuntimeException e) {
             System.err.println("Error starting the server" + e.getMessage());
         } finally {

@@ -63,7 +63,7 @@ public class Service implements IService {
         Payment payment1 = new Payment(payment.getDate(),
                 payment.getLocation(),
                 payment.getTreatment(),
-                payment.getCnp(),
+                payment.getPerson(),
                 -payment.getSum());
         return paymentRepo.add(payment1);
     }

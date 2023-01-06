@@ -15,22 +15,22 @@ import java.util.concurrent.Future;
 public class RequestsCreator extends Thread {
 
     private final ExecutorService executorService;
-
-    private final List<Person> personList;
+    private final Person person;
     private final List<Treatment> treatmentList;
     private final List<Location> locationList;
 
-    public RequestsCreator(ExecutorService executorService, List<Person> personList, List<Treatment> treatmentList, List<Location> locationList) {
+    public RequestsCreator(Person person, ExecutorService executorService, List<Treatment> treatmentList, List<Location> locationList) {
+        this.person = person;
         this.executorService = executorService;
-        this.personList = personList;
         this.treatmentList = treatmentList;
         this.locationList = locationList;
     }
 
     @Override
     public void run() {
-        for (int i = 0; i < 3; i++) {
-            RequestData addAppointmentRequestData = Randomizer.getRandomAppointmentRequestData(personList, treatmentList, locationList);
+
+        while (true) {
+            RequestData addAppointmentRequestData = Randomizer.getRandomAppointmentRequestData(person, treatmentList, locationList);
             ClientRequest addAppointmentRequest = new ClientRequest("127.0.0.1", 55555, addAppointmentRequestData);
 
             Future<Object> resultAddAppointment = executorService.submit(addAppointmentRequest);
@@ -45,12 +45,17 @@ public class RequestsCreator extends Thread {
             Payment payment = new Payment(LocalDateTime.now(),
                     appointment.getLocation(),
                     appointment.getTreatment(),
-                    appointment.getPerson().getCnp(),
+                    appointment.getPerson(),
                     appointment.getTreatment().getCost());
             RequestData addPaymentRequestData = new RequestData(RequestType.ADD_PAYMENT, payment);
 
             ClientRequest addPaymentRequest = new ClientRequest("127.0.0.1", 55555, addPaymentRequestData);
 
+            try {
+                sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             Future<Object> resultAddPayment = executorService.submit(addPaymentRequest);
 
             try {
@@ -71,7 +76,7 @@ public class RequestsCreator extends Thread {
             }
 
             try {
-                sleep(2000);
+                sleep(3000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

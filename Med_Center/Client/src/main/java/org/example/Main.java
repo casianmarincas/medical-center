@@ -30,17 +30,16 @@ public class Main {
 //        System.out.println(personList.size());
 
         Thread[] creators = new Thread[10];
-
-        for (int i = 0; i < 10; i++) {
-            creators[i] = new RequestsCreator(executorService, personList, treatmentList, locationList);
+        int i = 0;
+        for (Person p: personList) {
+            creators[i] = new RequestsCreator(p, executorService, treatmentList, locationList);
             creators[i].start();
+            i++;
         }
 
-        for (int i = 0; i < 10; i++) {
+        for (i = 0; i < 10; i++) {
             creators[i].join();
         }
 
-
     }
-
 }

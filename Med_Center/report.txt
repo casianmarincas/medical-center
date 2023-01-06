@@ -1,4 +1,17 @@
-Regina Maria1 at 2023-01-06T22:01:43.780929800
-SOLD: 230.0
-Regina Maria2 at 2023-01-06T22:01:43.780929800
-SOLD: 160.0
+Regina Maria1 at 2023-01-07T00:19:00.103348300
+SOLD: 710.0
+NOT PAID:
+Appointment{id=56, person=3, treatment=3, location=1, treatmentDateTime=2023-01-07T00:19, appointmentDateTime=2023-01-07T00:19}
+Appointment{id=51, person=4, treatment=3, location=1, treatmentDateTime=2023-01-07T00:19, appointmentDateTime=2023-01-07T00:19}
+Appointment{id=58, person=5, treatment=4, location=1, treatmentDateTime=2023-01-07T00:19, appointmentDateTime=2023-01-07T00:19}
+
+Regina Maria2 at 2023-01-07T00:19:00.103348300
+SOLD: 740.0
+NOT PAID:
+Appointment{id=55, person=9, treatment=1, location=2, treatmentDateTime=2023-01-07T00:19, appointmentDateTime=2023-01-07T00:19}
+Appointment{id=53, person=7, treatment=2, location=2, treatmentDateTime=2023-01-07T00:19, appointmentDateTime=2023-01-07T00:19}
+Appointment{id=52, person=8, treatment=4, location=2, treatmentDateTime=2023-01-07T00:19, appointmentDateTime=2023-01-07T00:19}
+Appointment{id=57, person=10, treatment=2, location=2, treatmentDateTime=2023-01-07T00:19, appointmentDateTime=2023-01-07T00:19}
+Appointment{id=59, person=6, treatment=2, location=2, treatmentDateTime=2023-01-07T00:19, appointmentDateTime=2023-01-07T00:19}
+Appointment{id=60, person=2, treatment=5, location=2, treatmentDateTime=2023-01-07T00:19, appointmentDateTime=2023-01-07T00:19}
+

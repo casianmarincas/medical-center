@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(name="treatments")
@@ -18,8 +19,6 @@ public class Treatment implements Serializable {
     private int id;
     private double cost;
     private double time;
-    private int maxPatients;
-
     public Treatment() {
     }
 
@@ -51,5 +50,18 @@ public class Treatment implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Treatment treatment = (Treatment) o;
+        return id == treatment.id && Double.compare(treatment.cost, cost) == 0 && Double.compare(treatment.time, time) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, cost, time);
     }
 }

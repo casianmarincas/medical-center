@@ -46,6 +46,5 @@ public class Server {
     }
 
     public void stop() {
-
     }
 }

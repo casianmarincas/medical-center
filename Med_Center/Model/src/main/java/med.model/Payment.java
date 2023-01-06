@@ -5,6 +5,8 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
+
 @Entity
 @Table(name="payments")
 public class Payment implements Serializable {
@@ -20,17 +22,20 @@ public class Payment implements Serializable {
     @JoinColumn(name="treatment_id")
     private Treatment treatment;
     private LocalDateTime date;
-    private String cnp;
+
+    @ManyToOne
+    @JoinColumn(name="person_id")
+    private Person person;
     private double sum;
 
     public Payment() {
     }
 
-    public Payment(LocalDateTime date, Location location, Treatment treatment, String cnp, double sum) {
+    public Payment(LocalDateTime date, Location location, Treatment treatment, Person person, double sum) {
         this.date = date;
         this.treatment = treatment;
         this.location = location;
-        this.cnp = cnp;
+        this.person = person;
         this.sum = sum;
     }
 
@@ -42,12 +47,12 @@ public class Payment implements Serializable {
         this.date = date;
     }
 
-    public String getCnp() {
-        return cnp;
+    public Person getPerson() {
+        return person;
     }
 
-    public void setCnp(String cnp) {
-        this.cnp = cnp;
+    public void setPerson(Person person) {
+        this.person = person;
     }
 
     public double getSum() {
@@ -72,5 +77,18 @@ public class Payment implements Serializable {
 
     public void setTreatment(Treatment treatment) {
         this.treatment = treatment;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Payment payment = (Payment) o;
+        return id == payment.id && Double.compare(payment.sum, sum) == 0 && location.equals(payment.location) && treatment.equals(payment.treatment) && date.equals(payment.date) && person.equals(payment.person);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, location, treatment, date, person, sum);
     }
 }
