@@ -16,15 +16,15 @@ public class Appointment implements Serializable {
     @GenericGenerator(name="inc-gen", strategy = "increment")
     private int id;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne
     @JoinColumn(name="person_id")
     private Person person;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne
     @JoinColumn(name="treatment_id")
     private Treatment treatment;
 
-    @ManyToOne(cascade = {CascadeType.ALL})
+    @ManyToOne
     @JoinColumn(name="location_id")
     private Location location;
     private LocalDateTime treatmentDateTime;
@@ -79,5 +79,17 @@ public class Appointment implements Serializable {
 
     public void setAppointmentDateTime(LocalDateTime appointmentDateTime) {
         this.appointmentDateTime = appointmentDateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "Appointment{" +
+                "id=" + id +
+                ", person=" + person.getId() +
+                ", treatment=" + treatment.getId() +
+                ", location=" + location.getId() +
+                ", treatmentDateTime=" + treatmentDateTime +
+                ", appointmentDateTime=" + appointmentDateTime +
+                '}';
     }
 }

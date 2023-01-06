@@ -1,6 +1,11 @@
 package med.server;
 
+import med.model.Location;
+import med.model.Treatment;
+import med.model.TreatmentLocation;
 import med.persistence.repository.*;
+
+import java.util.List;
 
 public class StartServer {
 
@@ -15,8 +20,8 @@ public class StartServer {
         TreatmentLocationRepo treatmentLocationRepo= new TreatmentLocationRepo();
 
         Service service = new Service(appointmentRepo, paymentRepo, locationRepo, treatmentLocationRepo, treatmentRepo, personRepo);
-
-
+//
+//
 //        treatmentRepo.add(new Treatment(50, 120));
 //        treatmentRepo.add(new Treatment(20, 20));
 //        treatmentRepo.add(new Treatment(40, 30));
@@ -58,7 +63,11 @@ public class StartServer {
         System.out.println("Starting server on port: " + chatServerPort);
         Server server = new Server(service, chatServerPort);
         try {
+            Thread t = new Verifier(service);
+            t.start();
+
             server.start();
+
         } catch (RuntimeException e) {
             System.err.println("Error starting the server" + e.getMessage());
         } finally {

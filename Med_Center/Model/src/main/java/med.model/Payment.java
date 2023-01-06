@@ -2,10 +2,7 @@ package med.model;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 @Entity
@@ -16,6 +13,12 @@ public class Payment implements Serializable {
     @GeneratedValue(generator="inc-gen")
     @GenericGenerator(name="inc-gen", strategy = "increment")
     private int id;
+    @ManyToOne
+    @JoinColumn(name="location_id")
+    private Location location;
+    @ManyToOne
+    @JoinColumn(name="treatment_id")
+    private Treatment treatment;
     private LocalDateTime date;
     private String cnp;
     private double sum;
@@ -23,8 +26,10 @@ public class Payment implements Serializable {
     public Payment() {
     }
 
-    public Payment(LocalDateTime date, String cnp, double sum) {
+    public Payment(LocalDateTime date, Location location, Treatment treatment, String cnp, double sum) {
         this.date = date;
+        this.treatment = treatment;
+        this.location = location;
         this.cnp = cnp;
         this.sum = sum;
     }
@@ -51,5 +56,21 @@ public class Payment implements Serializable {
 
     public void setSum(double sum) {
         this.sum = sum;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Treatment getTreatment() {
+        return treatment;
+    }
+
+    public void setTreatment(Treatment treatment) {
+        this.treatment = treatment;
     }
 }

@@ -34,7 +34,7 @@ public class PaymentRepo {
             Transaction tx = null;
             try {
                 tx = session.beginTransaction();
-                String entityName = Person.class.getName();
+                String entityName = Payment.class.getName();
                 List<Payment> paymentList = session.createQuery(" from " + entityName + " C", Payment.class).list();
                 tx.commit();
                 return paymentList;

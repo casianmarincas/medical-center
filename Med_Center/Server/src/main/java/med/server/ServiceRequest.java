@@ -68,25 +68,47 @@ class ServiceRequest implements Runnable {
                 Appointment appointment = (Appointment) request.data();
                 Appointment responseAppointment = service.addAppointment(appointment);
                 response = new Response.Builder().type(ResponseType.OK).data(responseAppointment).build();
-            } else if (request.type().equals(RequestType.ADD_PAYMENT)) {
+            }
+
+            if (request.type().equals(RequestType.ADD_PAYMENT)) {
                 System.out.println("Am primit request add payment");
                 Payment payment = (Payment) request.data();
                 Payment responsePayment = service.addPayment(payment);
                 response = new Response.Builder().type(ResponseType.OK).data(responsePayment).build();
+            }
 
-            } else if (request.type().equals(RequestType.GET_ALL_LOCATION)) {
+            if (request.type().equals(RequestType.CANCEL_APPOINTMENT)) {
+                System.out.println("Am primit request cancel appointment");
+                Appointment appointment = (Appointment) request.data();
+                Appointment responseAppointment = service.cancelAppointment(appointment);
+                response = new Response.Builder().type(ResponseType.OK).data(responseAppointment).build();
+            }
+
+            if (request.type().equals(RequestType.CANCEL_PAYMENT)) {
+                System.out.println("Am primit request cancel payment");
+                Payment payment = (Payment) request.data();
+                Payment responsePayment = service.cancelPayment(payment);
+                response = new Response.Builder().type(ResponseType.OK).data(responsePayment).build();
+            }
+
+            if (request.type().equals(RequestType.GET_ALL_LOCATION)) {
                 System.out.println("Am primit request get all location");
                 List<Location> responseList = service.getAllLocation();
                 response = new Response.Builder().type(ResponseType.OK).data(responseList).build();
-            } else if (request.type().equals(RequestType.GET_ALL_TREATMENT)) {
+            }
+
+            if (request.type().equals(RequestType.GET_ALL_TREATMENT)) {
                 System.out.println("Am primit request get all treatment");
                 List<Treatment> responseList = service.getAllTreatment();
                 response = new Response.Builder().type(ResponseType.OK).data(responseList).build();
-            } else if (request.type().equals(RequestType.GET_ALL_PERSON)) {
+            }
+
+            if (request.type().equals(RequestType.GET_ALL_PERSON)) {
                 System.out.println("Am primit request get all person");
                 List<Person> responseList = service.getAllPerson();
                 response = new Response.Builder().type(ResponseType.OK).data(responseList).build();
             }
+
         } catch (Error e){
             response = new Response.Builder().type(ResponseType.ERROR).build();
         }

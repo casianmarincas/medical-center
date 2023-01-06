@@ -81,11 +81,15 @@ public class ClientRequest implements Callable<Object> {
         }
 
         if (requestData.getType().equals(RequestType.CANCEL_APPOINTMENT)) {
-
+            Appointment appointment = (Appointment) requestData.getObject();
+            sendRequest(new Request.Builder().type(RequestType.CANCEL_APPOINTMENT).data(appointment).build());
+            response = getResponse();
         }
 
         if (requestData.getType().equals(RequestType.CANCEL_PAYMENT)) {
-
+            Payment payment = (Payment) requestData.getObject();
+            sendRequest(new Request.Builder().type(RequestType.CANCEL_PAYMENT).data(payment).build());
+            response = getResponse();
         }
 
         if (response.type().equals(ResponseType.OK)) {

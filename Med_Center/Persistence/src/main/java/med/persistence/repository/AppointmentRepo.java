@@ -32,12 +32,29 @@ public class AppointmentRepo {
         return null;
     }
 
+    public synchronized Appointment remove(Appointment appointment) {
+        try (Session session = HibernateUtils.getSessionFactory().openSession()) {
+            Transaction tx = null;
+            try {
+                tx = session.beginTransaction();
+                session.remove(appointment);
+                tx.commit();
+                return appointment;
+            } catch (RuntimeException ex) {
+                System.err.println("Eroare la select " + ex);
+                if (tx != null)
+                    tx.rollback();
+                return null;
+            }
+        }
+    }
+
     public synchronized List<Appointment> getAll() {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = null;
             try {
                 tx = session.beginTransaction();
-                String entityName = Person.class.getName();
+                String entityName = Appointment.class.getName();
                 List<Appointment> appointmentList = session.createQuery(" from " + entityName + " C", Appointment.class).list();
                 tx.commit();
                 return appointmentList;

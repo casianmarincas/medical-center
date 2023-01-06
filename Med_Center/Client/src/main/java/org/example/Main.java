@@ -1,19 +1,19 @@
 package org.example;
 
-import med.model.Location;
-import med.model.Person;
-import med.model.Treatment;
+import med.model.*;
+import med.networking.RequestType;
+import med.networking.Response;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Random;
+import java.util.concurrent.*;
 
 public class Main {
     private static final ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
         GetAllRequest request = new GetAllRequest("127.0.0.1", 55555);
 
         List<Callable<String>> taskList = new ArrayList<>();
@@ -29,8 +29,18 @@ public class Main {
 //        System.out.println(treatmentList.size());
 //        System.out.println(personList.size());
 
-        List<Callable<Object>> tasks = Randomizer.getRequests(personList, treatmentList, locationList);
-        executorService.invokeAll(tasks);
+        Thread[] creators = new Thread[10];
+
+        for (int i = 0; i < 10; i++) {
+            creators[i] = new RequestsCreator(executorService, personList, treatmentList, locationList);
+            creators[i].start();
+        }
+
+        for (int i = 0; i < 10; i++) {
+            creators[i].join();
+        }
+
+
     }
 
 }

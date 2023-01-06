@@ -26,6 +26,24 @@ public class Service implements IService {
 
     @Override
     public Appointment addAppointment(Appointment appointment) {
+
+//        List<TreatmentLocation> treatmentLocations = treatmentLocationRepo.getAll();
+//        int nMax = 0;
+//        TreatmentLocation tlFound = null;
+//        for (TreatmentLocation tl : treatmentLocations) {
+//            if (tl.getLocation().equals(appointment.getLocation()) &&
+//                    tl.getTreatment().equals(appointment.getTreatment())) {
+//                tlFound = tl;
+//                nMax = tl.getNrMax();
+//            }
+//        }
+//
+//        if (nMax > 0) {
+//            tlFound.setNrMax(tlFound.getNrMax() - 1);
+////            treatmentLocationRepo.update(tl);
+//
+//            return appointmentRepo.add(appointment);
+//        }
         return appointmentRepo.add(appointment);
     }
 
@@ -34,41 +52,60 @@ public class Service implements IService {
         return paymentRepo.add(payment);
     }
 
-    public List<Location> getAllLocation(){
+    @Override
+    public Appointment cancelAppointment(Appointment appointment) {
+        System.out.println("DELETING\n" + appointment);
+        return appointmentRepo.remove(appointment);
+    }
+
+    @Override
+    public Payment cancelPayment(Payment payment) {
+        Payment payment1 = new Payment(payment.getDate(),
+                payment.getLocation(),
+                payment.getTreatment(),
+                payment.getCnp(),
+                -payment.getSum());
+        return paymentRepo.add(payment1);
+    }
+
+    public List<Location> getAllLocation() {
         return locationRepo.getAll();
     }
 
-    public List<Person> getAllPerson(){
+    public List<Person> getAllPerson() {
         return personRepo.getAll();
     }
 
-    public List<Treatment> getAllTreatment(){
+    public List<Treatment> getAllTreatment() {
         return treatmentRepo.getAll();
     }
 
-    public void verifySum(){
+    public void verifySum() {
         List<Payment> paymentList = paymentRepo.getAll();
         List<Appointment> appointmentList = appointmentRepo.getAll();
 
         int paymentSum = 0;
         int appointmentSum = 0;
 
-        for (Payment p: paymentList){
-            paymentSum+=p.getSum();
+        for (Payment p : paymentList) {
+            paymentSum += p.getSum();
         }
 
-        for (Appointment a: appointmentList){
-            appointmentSum+=a.getTreatment().getCost();
+        for (Appointment a : appointmentList) {
+            appointmentSum += a.getTreatment().getCost();
         }
 
-        if (paymentSum!=appointmentSum){
+        if (paymentSum != appointmentSum) {
             System.out.println("Soldul total nu corespunde " + paymentSum + appointmentSum);
         }
 
-
-
-
     }
 
+    public List<Appointment> getAllAppointments() {
+        return appointmentRepo.getAll();
+    }
 
+    public List<Payment> getAllPayments() {
+        return paymentRepo.getAll();
+    }
 }
