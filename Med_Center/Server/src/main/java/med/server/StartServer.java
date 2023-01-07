@@ -69,6 +69,18 @@ public class StartServer {
             t.start();
 
             server.start();
+            sleep(2000);
+
+            server.stopExecutorService();
+            server.stop();
+            System.out.println("Server stopped");
+            server.join();
+            System.out.println("Server joined");
+
+            t.stop();
+            System.out.println("T stopped");
+            t.join();
+            System.out.println("T joined");
 
 /*
             server.setRunning(false);
@@ -79,6 +91,8 @@ public class StartServer {
 //            t.join();
         } catch (RuntimeException e) {
             System.err.println("Error starting the server" + e.getMessage());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         } finally {
             try {
                 server.stop();

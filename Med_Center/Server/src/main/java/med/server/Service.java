@@ -4,8 +4,15 @@ import med.model.*;
 import med.persistence.repository.*;
 import med.service.IService;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-
+class AppointmentTimeComparator implements Comparator<Appointment> {
+    @Override
+    public int compare(Appointment a, Appointment b) {
+        return a.getAppointmentDateTime().compareTo(b.getAppointmentDateTime());
+    }
+}
 public class Service implements IService {
 
     private final AppointmentRepo appointmentRepo;
@@ -27,23 +34,15 @@ public class Service implements IService {
     @Override
     public Appointment addAppointment(Appointment appointment) {
 
-//        List<TreatmentLocation> treatmentLocations = treatmentLocationRepo.getAll();
-//        int nMax = 0;
-//        TreatmentLocation tlFound = null;
-//        for (TreatmentLocation tl : treatmentLocations) {
-//            if (tl.getLocation().equals(appointment.getLocation()) &&
-//                    tl.getTreatment().equals(appointment.getTreatment())) {
-//                tlFound = tl;
-//                nMax = tl.getNrMax();
-//            }
-//        }
-//
-//        if (nMax > 0) {
-//            tlFound.setNrMax(tlFound.getNrMax() - 1);
-////            treatmentLocationRepo.update(tl);
-//
-//            return appointmentRepo.add(appointment);
-//        }
+        List<Appointment> appointmentList = appointmentRepo.getAll().stream()
+                .filter(ap -> ap.getLocation().equals(appointment.getLocation()))
+                .sorted(new AppointmentTimeComparator()).toList();
+
+        int noOverlapping = 0;
+
+        for (Appointment a: )
+
+
         return appointmentRepo.add(appointment);
     }
 
