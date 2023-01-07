@@ -38,8 +38,9 @@ public class RequestsCreator extends Thread {
 
 
             boolean error=false;
+            Response response = null;
             try {
-                Response response = (Response) resultAddAppointment.get();
+                response = (Response) resultAddAppointment.get();
                 if (response.type().equals(ResponseType.ERROR)){
                     error=true;
                 }
@@ -51,11 +52,8 @@ public class RequestsCreator extends Thread {
 
             if (!error) {
                 Appointment appointment = null;
-                try {
-                    appointment = (Appointment) ((Response) resultAddAppointment.get()).data();
-                } catch (ExecutionException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
+                appointment = (Appointment) response.data();
+
 
                 Payment payment = new Payment(LocalDateTime.now(),
                         appointment.getLocation(),

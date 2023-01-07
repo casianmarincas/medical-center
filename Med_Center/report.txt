@@ -1,11 +1,8 @@
-Regina Maria1 at 2023-01-07T17:28:25.079111500
-SOLD: 1620.0
+Regina Maria1 at 2023-01-07T23:59:18.531666400
+SOLD: 170.0
 NOT PAID:
-Appointment{id=101, person=7, treatment=5, location=1, treatmentDateTime=2023-01-07T16:19:04, appointmentDateTime=2023-01-07T16:19:04}
-Appointment{id=100, person=9, treatment=3, location=1, treatmentDateTime=2023-01-07T16:19:04, appointmentDateTime=2023-01-07T16:19:04}
 
-Regina Maria2 at 2023-01-07T17:28:25.096114700
-SOLD: 1750.0
+Regina Maria2 at 2023-01-07T23:59:18.531666400
+SOLD: 0.0
 NOT PAID:
-Appointment{id=106, person=2, treatment=1, location=2, treatmentDateTime=2023-01-07T16:19:04, appointmentDateTime=2023-01-07T16:19:04}
 

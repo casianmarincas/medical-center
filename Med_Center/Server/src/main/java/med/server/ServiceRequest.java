@@ -109,7 +109,7 @@ class ServiceRequest implements Runnable {
                 response = new Response.Builder().type(ResponseType.OK).data(responseList).build();
             }
 
-        } catch (Error e){
+        } catch (RuntimeException e){
             response = new Response.Builder().type(ResponseType.ERROR).build();
         }
         return response;

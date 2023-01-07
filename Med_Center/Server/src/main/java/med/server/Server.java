@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Server extends Thread {
+public class Server {
 
     private IService service;
     private int port;
@@ -22,8 +22,7 @@ public class Server extends Thread {
         this.port = port;
     }
 
-    @Override
-    public void run() {
+    public void start() {
         try {
             System.out.println("Starting Server");
             serverSocket = new ServerSocket(port);
@@ -45,6 +44,8 @@ public class Server extends Thread {
         }
 
     }
+
+    public void stop() {}
 
     public void stopExecutorService() {
         executorService.shutdown();
