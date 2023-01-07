@@ -7,6 +7,7 @@ import med.networking.RequestType;
 import med.networking.Response;
 import med.networking.ResponseType;
 
+import javax.management.RuntimeErrorException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -94,6 +95,12 @@ public class ClientRequest implements Callable<Object> {
 
         if (response.type().equals(ResponseType.OK)) {
             System.out.println("OK!!!");
+        }
+
+        if (response.type().equals(ResponseType.ERROR)){
+
+            System.out.println("Nu s-a putut face cererea");
+
         }
 
         return response;

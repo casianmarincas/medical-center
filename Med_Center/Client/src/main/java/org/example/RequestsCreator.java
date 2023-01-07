@@ -3,6 +3,7 @@ package org.example;
 import med.model.*;
 import med.networking.RequestType;
 import med.networking.Response;
+import med.networking.ResponseType;
 
 import java.beans.IntrospectionException;
 import java.time.LocalDateTime;
@@ -35,46 +36,62 @@ public class RequestsCreator extends Thread {
 
             Future<Object> resultAddAppointment = executorService.submit(addAppointmentRequest);
 
-            Appointment appointment = null;
+
+            boolean error=false;
             try {
-                appointment = (Appointment) ((Response) resultAddAppointment.get()).data();
-            } catch (ExecutionException | InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-            Payment payment = new Payment(LocalDateTime.now(),
-                    appointment.getLocation(),
-                    appointment.getTreatment(),
-                    appointment.getPerson(),
-                    appointment.getTreatment().getCost());
-            RequestData addPaymentRequestData = new RequestData(RequestType.ADD_PAYMENT, payment);
-
-            ClientRequest addPaymentRequest = new ClientRequest("127.0.0.1", 55555, addPaymentRequestData);
-
-            try {
-                sleep(2000);
+                Response response = (Response) resultAddAppointment.get();
+                if (response.type().equals(ResponseType.ERROR)){
+                    error=true;
+                }
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            Future<Object> resultAddPayment = executorService.submit(addPaymentRequest);
-
-            try {
-                payment = (Payment) ((Response) resultAddPayment.get()).data();
-            } catch (ExecutionException | InterruptedException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
             }
 
-            Random r = new Random();
-            if (r.nextDouble() < 0.25) {
-                RequestData cancelPaymentRequestData = new RequestData(RequestType.CANCEL_PAYMENT, payment);
-                ClientRequest cancelPaymentRequest = new ClientRequest("127.0.0.1", 55555, cancelPaymentRequestData);
-                executorService.submit(cancelPaymentRequest);
+            if (!error) {
+                Appointment appointment = null;
+                try {
+                    appointment = (Appointment) ((Response) resultAddAppointment.get()).data();
+                } catch (ExecutionException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
 
-                RequestData cancelAppointmentRequestData = new RequestData(RequestType.CANCEL_APPOINTMENT, appointment);
-                ClientRequest cancelAppointmentRequest = new ClientRequest("127.0.0.1", 55555, cancelAppointmentRequestData);
-                executorService.submit(cancelAppointmentRequest);
+                Payment payment = new Payment(LocalDateTime.now(),
+                        appointment.getLocation(),
+                        appointment.getTreatment(),
+                        appointment.getPerson(),
+                        appointment.getTreatment().getCost());
+                RequestData addPaymentRequestData = new RequestData(RequestType.ADD_PAYMENT, payment);
+
+                ClientRequest addPaymentRequest = new ClientRequest("127.0.0.1", 55555, addPaymentRequestData);
+
+                try {
+                    sleep(2000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                Future<Object> resultAddPayment = executorService.submit(addPaymentRequest);
+
+                try {
+                    payment = (Payment) ((Response) resultAddPayment.get()).data();
+                } catch (ExecutionException | InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+                Random r = new Random();
+                if (r.nextDouble() < 0.25) {
+                    RequestData cancelPaymentRequestData = new RequestData(RequestType.CANCEL_PAYMENT, payment);
+                    ClientRequest cancelPaymentRequest = new ClientRequest("127.0.0.1", 55555, cancelPaymentRequestData);
+                    executorService.submit(cancelPaymentRequest);
+
+                    RequestData cancelAppointmentRequestData = new RequestData(RequestType.CANCEL_APPOINTMENT, appointment);
+                    ClientRequest cancelAppointmentRequest = new ClientRequest("127.0.0.1", 55555, cancelAppointmentRequestData);
+                    executorService.submit(cancelAppointmentRequest);
+                }
+
+
             }
-
             try {
                 sleep(3000);
             } catch (InterruptedException e) {
