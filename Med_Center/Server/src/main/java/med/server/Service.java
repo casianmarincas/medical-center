@@ -4,6 +4,9 @@ import med.model.*;
 import med.persistence.repository.*;
 import med.service.IService;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -38,12 +41,38 @@ public class Service implements IService {
                 .filter(ap -> ap.getLocation().equals(appointment.getLocation()))
                 .sorted(new AppointmentTimeComparator()).toList();
 
-        int noOverlapping = 0;
+        int overlapping = 0;
+        double treatmentTime = appointment.getTreatment().getTime();
 
-        for (Appointment a: )
+        LocalDateTime dateTime = appointment.getTreatmentDateTime();
 
+        for (Appointment a: appointmentList){
+            LocalDateTime dateTimea = a.getAppointmentDateTime();
 
-        return appointmentRepo.add(appointment);
+            Duration d = Duration.between(dateTimea.toLocalTime(), dateTime.toLocalTime());
+            double time = Math.abs((double)d.toMinutes());
+            if (time < treatmentTime){
+                overlapping+=1;
+
+            }
+
+        }
+
+        List<TreatmentLocation> treatmentLocationList = treatmentLocationRepo.getAll();
+
+        int maxAvailability = 0;
+        for (TreatmentLocation tl: treatmentLocationList) {
+            if (tl.getLocation().equals(appointment.getLocation()) && tl.getTreatment().equals(appointment.getTreatment())) {
+                maxAvailability = tl.getNrMax();
+                break;
+            }
+        }
+
+        if (overlapping<maxAvailability){
+            return appointmentRepo.add(appointment);
+        } else {
+            throw new RuntimeException("Appointment is not available");
+        }
     }
 
     @Override
