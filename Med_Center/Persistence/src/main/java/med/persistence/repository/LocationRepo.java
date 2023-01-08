@@ -11,7 +11,7 @@ import java.util.List;
 
 public class LocationRepo {
 
-    public synchronized Location add(Location location) {
+    public Location add(Location location) {
         Session session = HibernateUtils.getSessionFactory().openSession();
         try (session) {
             Transaction tx = null;
@@ -30,7 +30,7 @@ public class LocationRepo {
         return null;
     }
 
-    public synchronized List<Location> getAll() {
+    public List<Location> getAll() {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = null;
             try {

@@ -11,7 +11,7 @@ import java.util.List;
 
 public class AppointmentRepo {
 
-    public synchronized Appointment add(Appointment appointment) {
+    public Appointment add(Appointment appointment) {
         Session session = HibernateUtils.getSessionFactory().openSession();
         try (session) {
             Transaction tx = null;

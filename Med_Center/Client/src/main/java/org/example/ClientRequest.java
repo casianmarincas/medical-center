@@ -42,7 +42,7 @@ public class ClientRequest implements Callable<Object> {
             output.flush();
             input = new ObjectInputStream(socket.getInputStream());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("I stopped!!");
         }
     }
 
@@ -69,37 +69,41 @@ public class ClientRequest implements Callable<Object> {
     public Object call() {
 
         Response response = null;
-        if (requestData.getType().equals(RequestType.ADD_APPOINTMENT)) {
-            Appointment appointment = (Appointment) requestData.getObject();
-            sendRequest(new Request.Builder().type(RequestType.ADD_APPOINTMENT).data(appointment).build());
-            response = getResponse();
-        }
+        try {
+            if (requestData.getType().equals(RequestType.ADD_APPOINTMENT)) {
+                Appointment appointment = (Appointment) requestData.getObject();
+                sendRequest(new Request.Builder().type(RequestType.ADD_APPOINTMENT).data(appointment).build());
+                response = getResponse();
+            }
 
-        if (requestData.getType().equals(RequestType.ADD_PAYMENT)) {
-            Payment payment = (Payment) requestData.getObject();
-            sendRequest(new Request.Builder().type(RequestType.ADD_PAYMENT).data(payment).build());
-            response = getResponse();
-        }
+            if (requestData.getType().equals(RequestType.ADD_PAYMENT)) {
+                Payment payment = (Payment) requestData.getObject();
+                sendRequest(new Request.Builder().type(RequestType.ADD_PAYMENT).data(payment).build());
+                response = getResponse();
+            }
 
-        if (requestData.getType().equals(RequestType.CANCEL_APPOINTMENT)) {
-            Appointment appointment = (Appointment) requestData.getObject();
-            sendRequest(new Request.Builder().type(RequestType.CANCEL_APPOINTMENT).data(appointment).build());
-            response = getResponse();
-        }
+            if (requestData.getType().equals(RequestType.CANCEL_APPOINTMENT)) {
+                Appointment appointment = (Appointment) requestData.getObject();
+                sendRequest(new Request.Builder().type(RequestType.CANCEL_APPOINTMENT).data(appointment).build());
+                response = getResponse();
+            }
 
-        if (requestData.getType().equals(RequestType.CANCEL_PAYMENT)) {
-            Payment payment = (Payment) requestData.getObject();
-            sendRequest(new Request.Builder().type(RequestType.CANCEL_PAYMENT).data(payment).build());
-            response = getResponse();
-        }
+            if (requestData.getType().equals(RequestType.CANCEL_PAYMENT)) {
+                Payment payment = (Payment) requestData.getObject();
+                sendRequest(new Request.Builder().type(RequestType.CANCEL_PAYMENT).data(payment).build());
+                response = getResponse();
+            }
 
-        if (response.type().equals(ResponseType.OK)) {
-            System.out.println("OK!!!");
-        }
+            if (response.type().equals(ResponseType.OK)) {
+                System.out.println("OK!!!");
+            }
 
-        if (response.type().equals(ResponseType.ERROR)){
+            if (response.type().equals(ResponseType.ERROR)) {
 
-            System.out.println("Nu s-a putut face cererea");
+                System.out.println("Nu s-a putut face cererea");
+
+            }
+        } catch (RuntimeException runtimeException) {
 
         }
 

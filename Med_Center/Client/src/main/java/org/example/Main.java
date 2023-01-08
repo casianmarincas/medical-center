@@ -25,6 +25,7 @@ public class Main {
         List<Treatment> treatmentList = request.getTreatmentList();
         List<Location> locationList = request.getLocationList();
 
+        System.out.println(locationList);
 //        System.out.println(locationList.size());
 //        System.out.println(treatmentList.size());
 //        System.out.println(personList.size());
@@ -41,5 +42,6 @@ public class Main {
             creators[i].join();
         }
 
+        executorService.shutdown();
     }
 }

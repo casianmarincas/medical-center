@@ -9,7 +9,7 @@ import java.util.List;
 
 public class PersonRepo {
 
-    public synchronized Person add(Person person) {
+    public Person add(Person person) {
         Session session = HibernateUtils.getSessionFactory().openSession();
         try (session) {
             Transaction tx = null;
@@ -28,7 +28,7 @@ public class PersonRepo {
         return null;
     }
 
-    public synchronized List<Person> getAll() {
+    public List<Person> getAll() {
         try (Session session = HibernateUtils.getSessionFactory().openSession()) {
             Transaction tx = null;
             try {

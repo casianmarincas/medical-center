@@ -11,8 +11,6 @@ import static java.lang.Thread.sleep;
 
 public class StartServer {
 
-    private static int defaultPort = 55555;
-
     public static void main(String[] args) {
         AppointmentRepo appointmentRepo = new AppointmentRepo();
         LocationRepo locationRepo = new LocationRepo();
@@ -22,7 +20,7 @@ public class StartServer {
         TreatmentLocationRepo treatmentLocationRepo = new TreatmentLocationRepo();
 
         Service service = new Service(appointmentRepo, paymentRepo, locationRepo, treatmentLocationRepo, treatmentRepo, personRepo);
-//
+
 //
 //        treatmentRepo.add(new Treatment(50, 120));
 //        treatmentRepo.add(new Treatment(20, 20));
@@ -34,15 +32,17 @@ public class StartServer {
 //
 //        locationRepo.add(new Location("Regina Maria1"));
 //        locationRepo.add(new Location("Regina Maria2"));
+//        locationRepo.add(new Location("Regina Maria3"));
+//        locationRepo.add(new Location("Regina Maria4"));
 //
 //        List<Location> locationList = locationRepo.getAll();
-//        int[][] matrix = new int[2][5];
+//        int[][] matrix = new int[4][5];
 //        matrix[0][0]=3;
 //        matrix[0][1]=1;
 //        matrix[0][2]=1;
 //        matrix[0][3]=2;
 //        matrix[0][4]=1;
-//        for(int i=1; i<2;i++){
+//        for(int i=1; i<4;i++){
 //            for(int j=0; j<5;j++){
 //                matrix[i][j]=matrix[0][j]*(i-1);
 //            }
@@ -58,45 +58,33 @@ public class StartServer {
 //            }
 //            j++;
 //        }
+//
 
-
-        int chatServerPort = defaultPort;
+        int chatServerPort = 55555;
 
         System.out.println("Starting server on port: " + chatServerPort);
         Server server = new Server(service, chatServerPort);
         try {
-            Verifier t = new Verifier(service);
+            Verifier verifier = new Verifier(service);
+            verifier.start();
+
+            Thread t = new Thread(server::start);
+
             t.start();
+            sleep(30000);
 
-            server.start();
-//            sleep(2000);
-//
-//            server.stopExecutorService();
-//            server.stop();
-//            System.out.println("Server stopped");
-//            server.join();
-//            System.out.println("Server joined");
-//
-//            t.stop();
-//            System.out.println("T stopped");
-//            t.join();
-//            System.out.println("T joined");
+            System.out.println("Calling stop!");
+            server.stop();
+            t.join();
+            System.out.println("Server stopped");
 
-/*
-            server.setRunning(false);
-            t.setRunning(false);
-*/
-//
-//            server.join();
-//            t.join();
+            verifier.stop();
+            verifier.join();
         } catch (RuntimeException e) {
             System.err.println("Error starting the server" + e.getMessage());
-        } finally {
-            try {
-                server.stop();
-            } catch (RuntimeException e) {
-                System.err.println("Error stopping server " + e.getMessage());
-            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
+        System.out.println("Final yay");
     }
 }

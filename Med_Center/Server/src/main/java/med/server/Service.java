@@ -108,27 +108,6 @@ public class Service implements IService {
         return treatmentRepo.getAll();
     }
 
-    public void verifySum() {
-        List<Payment> paymentList = paymentRepo.getAll();
-        List<Appointment> appointmentList = appointmentRepo.getAll();
-
-        int paymentSum = 0;
-        int appointmentSum = 0;
-
-        for (Payment p : paymentList) {
-            paymentSum += p.getSum();
-        }
-
-        for (Appointment a : appointmentList) {
-            appointmentSum += a.getTreatment().getCost();
-        }
-
-        if (paymentSum != appointmentSum) {
-            System.out.println("Soldul total nu corespunde " + paymentSum + appointmentSum);
-        }
-
-    }
-
     public List<Appointment> getAllAppointments() {
         return appointmentRepo.getAll();
     }

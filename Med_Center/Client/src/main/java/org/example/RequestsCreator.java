@@ -48,12 +48,17 @@ public class RequestsCreator extends Thread {
                 e.printStackTrace();
             } catch (ExecutionException e) {
                 e.printStackTrace();
+            } catch (NullPointerException nullPointerException) {
+                return;
             }
 
             if (!error) {
                 Appointment appointment = null;
-                appointment = (Appointment) response.data();
-
+                try {
+                    appointment = (Appointment) response.data();
+                } catch (NullPointerException nullPointerException) {
+                    return;
+                }
 
                 Payment payment = new Payment(LocalDateTime.now(),
                         appointment.getLocation(),

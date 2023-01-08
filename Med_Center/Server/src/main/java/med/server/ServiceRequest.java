@@ -12,8 +12,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
+import java.util.concurrent.Callable;
 
-class ServiceRequest implements Runnable {
+class ServiceRequest implements Callable<String> {
 
     private final Socket socket;
 
@@ -31,29 +32,6 @@ class ServiceRequest implements Runnable {
             input = new ObjectInputStream(connection.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    public void run() {
-        try {
-            Object request = input.readObject();
-            Response response = handleRequest((Request) request);
-            if (response != null) {
-                sendResponse(response);
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
-        try {
-            socket.close();
-        } catch (IOException ioe) {
-            System.out.println("Error closing client connection");
         }
     }
 
@@ -123,5 +101,25 @@ class ServiceRequest implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String call() throws Exception {
+        try {
+            Object request = input.readObject();
+            Response response = handleRequest((Request) request);
+            if (response != null) {
+                sendResponse(response);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            socket.close();
+        } catch (IOException ioe) {
+            System.out.println("Error closing client connection");
+        }
+        return "done";
     }
 }
